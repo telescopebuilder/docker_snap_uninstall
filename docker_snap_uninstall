@@ -1,0 +1,21 @@
+---
+- name: Uninstall Docker using snap
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: Stop Docker service
+      service:
+        name: snap.docker.dockerd
+        state: stopped
+
+    - name: Uninstall Docker using snap
+      shell: snap remove docker
+
+    - name: Ensure Docker package is removed
+      shell: test ! -e /snap/bin/docker
+      register: result
+
+    - name: Show result
+      debug:
+        var: result
